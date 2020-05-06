@@ -1,0 +1,16 @@
+.Episode {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.Episode div {
+  flex-flow: column nowrap;
+  text-align: left;
+  margin-inline-end: 1.6rem;
+}
+.Episode div:first-child {
+  padding-top: 2.75rem;
+}
+.Episode div:last-child {
+  flex: 1 1;
+}
