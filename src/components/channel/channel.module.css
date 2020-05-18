@@ -1,0 +1,12 @@
+.Channel {
+  display: flex;
+  flex-flow: column;
+}
+.ImageWrapper {
+  display: flex;
+}
+
+.Image {
+  width: 150px;
+  height: 150px;
+}

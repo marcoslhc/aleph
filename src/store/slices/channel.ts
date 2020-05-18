@@ -6,24 +6,24 @@ import {
 } from "@reduxjs/toolkit";
 import { convertFeed, getRssFeed } from "../../lib/channel";
 import { RootState, AppDispatch } from "../types";
-import { Feed, EpisodeTypes } from "../../lib/channel/types";
+import { Channel, EpisodeTypes } from "../../lib/channel/types";
 
 type SliceState = {
   request: string;
   data: any;
   message: string;
-  selectedItem: undefined | string;
-  selectedSeason: undefined | number;
+  selectedItemKey: undefined | string;
+  selectedSeasonId: undefined | number;
 };
 const initialState: SliceState = {
   request: "idle",
-  selectedItem: undefined,
+  selectedItemKey: undefined,
   data: {},
-  selectedSeason: undefined,
+  selectedSeasonId: undefined,
   message: "",
 };
 export const getChannel = createAsyncThunk<
-  Feed,
+  Channel,
   number,
   { dispatch: AppDispatch; state: RootState }
 >("feed/getChannel", async (id, { getState }) => {
@@ -37,37 +37,38 @@ export const getChannel = createAsyncThunk<
   }
 });
 
-const slice: Slice = createSlice({
+const slice: Slice<SliceState> = createSlice({
   name: "channel",
   initialState,
   reducers: {
     selectSeason: (state, action: PayloadAction<number>) => {
       return {
         ...state,
-        selectSeason: action.payload,
+        selectedSeasonId: action.payload,
       };
     },
     selectItem: (
       state,
       action: PayloadAction<{
+        season: number;
         type: EpisodeTypes;
-        item: number;
+        id: number;
       }>,
     ) => {
-      const { type, item } = action.payload;
-      const itemPath = `${type}.${item}`;
+      const { season, type, id } = action.payload;
+      const itemPath = `${season}.${type}.${id}`;
       return {
         ...state,
-        selectedItem: itemPath,
+        selectedItemKey: itemPath,
       };
     },
     deselectSeason: (state, action: PayloadAction<undefined>) => ({
       ...state,
-      selectSeason: undefined,
+      selectedSeasonId: undefined,
     }),
     deselectItem: (state, action: PayloadAction<undefined>) => ({
       ...state,
-      selectedItem: undefined,
+      selectedItemKey: undefined,
     }),
   },
   extraReducers: {
@@ -93,25 +94,19 @@ export const {
   actions: { selectItem, selectSeason, deselectItem, deselectSeason },
 } = slice;
 
-export const clearSeason = createAsyncThunk<
-  void,
-  {
-    state: RootState;
-    dispatch: AppDispatch;
-  }
->("channel/clearSeason", async (_, { dispatch }) => {
-  await dispatch(deselectItem(void 0));
-  await dispatch(deselectSeason(void 0));
-});
+export const clearSeason = createAsyncThunk<void>(
+  "channel/clearSeason",
+  async (_, { dispatch }) => {
+    await dispatch(deselectItem(void 0));
+    await dispatch(deselectSeason(void 0));
+  },
+);
 
-export const clearItem = createAsyncThunk<
-  void,
-  {
-    state: RootState;
-    dispatch: AppDispatch;
-  }
->("channel/clearSeason", async (_, { dispatch }) => {
-  await dispatch(deselectItem(void 0));
-});
+export const clearItem = createAsyncThunk<void>(
+  "channel/clearSeason",
+  async (_, { dispatch }) => {
+    await dispatch(deselectItem(void 0));
+  },
+);
 
 export default slice;

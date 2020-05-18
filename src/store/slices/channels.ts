@@ -41,24 +41,33 @@ export const getChannels = createAsyncThunk<
         title: "Family Ghosts",
       },
     },
+    {
+      title: "Philosophize This!",
+      url: "http://philosophizethis.libsyn.com/rss",
+      image: {
+        url:
+          "http://static.libsyn.com/p/assets/1/d/9/4/1d946f34af4d1ee6/logo1.jpg",
+        title: "Philosophize This!",
+      },
+    },
   ]);
 });
 
-interface InitialState {
+interface SliceState {
   request: string;
   data: any[];
   message: string;
   selectedChannel: undefined | number;
 }
 
-const initialState = {
+const initialState: SliceState = {
   request: "idle",
   data: [],
   message: "",
   selectedChannel: undefined,
 };
 
-const slice: Slice = createSlice({
+const slice: Slice<SliceState> = createSlice({
   name: "channels",
   initialState,
   reducers: {
@@ -92,14 +101,11 @@ export const {
   actions: { selectChannel, deselectChannel },
 } = slice;
 
-export const clearChannel = createAsyncThunk<
-  void,
-  {
-    state: RootState;
-    dispatch: AppDispatch;
-  }
->("channels/clearChannel", async (_, { dispatch }) => {
-  await dispatch(deselectChannel(void 0));
-});
+export const clearChannel = createAsyncThunk<void>(
+  "channels/clearChannel",
+  async (_, { dispatch }) => {
+    await dispatch(deselectChannel(void 0));
+  },
+);
 
 export default slice;

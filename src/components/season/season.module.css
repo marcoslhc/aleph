@@ -7,8 +7,3 @@
 .SeasonTitle {
   text-align: left;
 }
-.SeasonContentWrapper {
-  flex-flow: column nowrap;
-  flex: 1 1 100%;
-  padding-left: 16.18%;
-}

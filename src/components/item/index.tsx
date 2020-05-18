@@ -1,16 +1,22 @@
 import React from "react";
 import style from "./item.module.css";
-import { Episode as IEpisode } from "../../lib/feed/types";
+import { Episode as IEpisode } from "../../lib/channel/types";
 
-export const Episode: React.FC<IEpisode & { showDescription?: boolean }> = ({
+type ItemProps = IEpisode & {
+  onClick: React.MouseEventHandler;
+  showDescription?: boolean;
+};
+
+export const Item: React.FC<ItemProps> = ({
   title,
   author,
   description,
   showDescription = false,
+  onClick = () => {},
   ...props
 }) => {
   return (
-    <div className={style.Episode}>
+    <div className={style.Item} onClick={onClick}>
       <div>Play Episode</div>
       <div>
         <h3>{title}</h3>
@@ -23,4 +29,4 @@ export const Episode: React.FC<IEpisode & { showDescription?: boolean }> = ({
   );
 };
 
-export default Episode;
+export default Item;

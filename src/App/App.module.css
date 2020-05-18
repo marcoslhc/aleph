@@ -1,0 +1,25 @@
+.App {
+  display: grid;
+  grid-template-areas:
+    "header"
+    "main"
+    "player";
+  row-gap: 1.414rem;
+  font-family: sans-serif;
+  text-align: center;
+}
+.App main {
+  display: grid;
+  column-gap: 1.414rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-area: main;
+}
+
+.App header {
+  min-height: 10rem;
+  grid-area: header;
+}
+
+.App .player {
+  grid-area: player;
+}
