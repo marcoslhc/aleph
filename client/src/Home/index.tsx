@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import styles from "./App.module.css";
+import styles from "./Home.module.css";
 import { getChannels, selectChannel } from "../store/slices/channels";
 import {
   getChannel,
@@ -21,7 +21,7 @@ type selectionType = "EPISODE" | "SEASON" | "CHANNEL";
 // }
 // }
 type N = number;
-export default function App() {
+export default function App () {
   const dispatch = useDispatch();
   const {
     channels,
@@ -103,7 +103,7 @@ export default function App() {
               <Season
                 key={idx}
                 seasonNumber={idx + 1}
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   handleSelect({
                     type: "SEASON",
