@@ -1,0 +1,217 @@
+openapi: 3.0.0
+servers:
+  - url: https://localhost:8081
+    description: New Server 1
+  - url: https://{env}-api.xiryvella.com
+    description: New Server 2
+    variables:
+      env:
+        default: dev
+        enum:
+          - dev
+          - stage
+          - prod
+info:
+  description: Aleph Podcasts Api
+  version: "1.0.0"
+  title: Simple Podcast Feed Management API
+  contact:
+    email: marcoslhc@gmail.com
+    name: Marcos Hernandez
+    url: https://xiryvella.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /users/{user_id}:
+    description: All user info
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      tags:
+        - user
+  /users/{user_id}/feeds:
+    description: Feeds operations
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      description: A list of feeds
+      responses:
+        200:
+          description: A list of feeds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Feed"
+      tags:
+        - user
+        - feeds
+
+    post:
+      description: Post a new feed
+      responses:
+        201:
+          description: Resource Created
+      tags:
+        - user
+        - feeds
+  /users/{user_id}/feeds/{feed_id}:
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: feed_id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      description: Get feed for a user
+      responses:
+        200:
+          description: A feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Feed"
+      tags:
+        - user
+        - feeds
+  /users/{user_id}/{device_id}/status:
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      description: Stream Play Status
+      responses:
+        200:
+          description: status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stream"
+      tags:
+        - user
+components:
+  schemas:
+    Podcast:
+      description: Podcast
+      properties:
+        id:
+          type: string
+        cover_url:
+          type: string
+        homepage_url:
+          type: string
+        name:
+          type: string
+        feed:
+          $ref: "#/components/schemas/Feed"
+    Feed:
+      description: A feed
+      properties:
+        id:
+          type: string
+        last_checked:
+          type: string
+          format: date
+        url:
+          type: string
+    Episode:
+      description: a podcast episode
+      properties:
+        id:
+          type: number
+        podcast_id:
+          type: string
+        season:
+          type: integer
+        media_url:
+          type: string
+        total_time:
+          type: integer
+    User:
+      description: A user
+      properties:
+        id:
+          type: string
+        account:
+          $ref: "#/components/schemas/Account"
+        podcasts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Podcast"
+        streams:
+          type: array
+          items:
+            $ref: "#/components/schemas/Stream"
+    Account:
+      description: A user account
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        dob:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+            - "ACTIVE"
+            - "INACTIVE"
+            - "SUSPENDED"
+            - "PENDING"
+        date_created:
+          type: string
+          format: timestamp
+    Stream:
+      description: a stream
+      properties:
+        device_id:
+          type: string
+          format: uuid
+        start_time:
+          type: string
+          format: timestamp
+        ellapsed:
+          type: integer
+        media:
+          $ref: "#/components/schemas/Episode"
